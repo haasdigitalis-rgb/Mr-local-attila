@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MR LOCAL × Attila — Plus d'appels pour vos franchisés couvreurs</title>
+  <meta name="description" content="MR LOCAL aide les franchisés Attila à recevoir plus d'appels de clients locaux grâce à Google. Audit gratuit." />
+  <meta name="robots" content="noindex" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800;900&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── TOKENS ─── */
+    :root {
+      --bg:      #F5F3EE;
+      --bg2:     #EDEREB;
+      --ink:     #1A1612;
+      --ink2:    #3D3830;
+      --muted:   #7A7165;
+      --line:    #D9D3C7;
+      --orange:  #D95F00;
+      --orange-l:#F26B00;
+      --orange-bg:#FFF0E6;
+      --orange-border:#F5C4A0;
+      --slate:   #1E2D3D;
+      --slate2:  #263545;
+      --green:   #1A7A45;
+      --green-bg:#E8F5EE;
+      --red:     #C0392B;
+      --font-d:  'Syne', sans-serif;
+      --font-b:  'Instrument Sans', sans-serif;
+      --max:     1080px;
+      --r:       14px;
+      --r-lg:    22px;
+    }
+
+    *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-b); background: var(--bg); color: var(--ink); line-height: 1.6; overflow-x: hidden; }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeUp { from { opacity:0; transform:translateY(22px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes ring { 0%{box-shadow:0 0 0 0 rgba(217,95,0,.45)} 70%{box-shadow:0 0 0 16px rgba(217,95,0,0)} 100%{box-shadow:0 0 0 0 rgba(217,95,0,0)} }
+    @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+
+    .rv { opacity:0; transform:translateY(20px); transition: opacity .55s ease, transform .55s ease; }
+    .rv.on { opacity:1; transform:translateY(0); }
+
+    /* ─── LAYOUT ─── */
+    .c { width: min(var(--max), calc(100% - 32px)); margin: 0 auto; }
+    .sec { padding: 80px 0; }
+    .sec-alt { background: var(--slate); color: #E8EDF2; }
+    .sec-light { background: #FDFCFA; }
+
+    /* ─── TYPE ─── */
+    .label {
+      font-family: var(--font-d);
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--orange);
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+    h1 {
+      font-family: var(--font-d);
+      font-weight: 900;
+      font-size: clamp(2.2rem, 4.5vw, 4rem);
+      line-height: 1.01;
+      letter-spacing: -.03em;
+      margin-bottom: 20px;
+    }
+    h2 {
+      font-family: var(--font-d);
+      font-weight: 800;
+      font-size: clamp(1.8rem, 3.2vw, 3rem);
+      line-height: 1.05;
+      letter-spacing: -.025em;
+      margin-bottom: 16px;
+    }
+    h3 { font-family: var(--font-d); font-weight: 700; font-size: 1.05rem; margin-bottom: 8px; }
+    .lead { font-size: 1rem; color: var(--muted); line-height: 1.72; max-width: 580px; }
+    .hl { color: var(--orange); }
+    .hl-w { color: #fff; }
+
+    /* ─── BTN ─── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      border: none; border-radius: 999px;
+      padding: 14px 26px;
+      font-family: var(--font-b); font-size: .92rem; font-weight: 600;
+      cursor: pointer; transition: all .2s ease; white-space: nowrap;
+    }
+    .btn-primary { background: var(--orange); color: #fff; animation: ring 2.8s infinite; }
+    .btn-primary:hover { background: #C25500; transform: translateY(-2px); box-shadow: 0 10px 28px rgba(217,95,0,.35); }
+    .btn-outline { background: transparent; color: var(--ink); border: 1.5px solid var(--line); }
+    .btn-outline:hover { border-color: var(--orange); color: var(--orange); }
+    .btn-white { background: #fff; color: var(--orange); font-weight: 700; }
+    .btn-white:hover { background: var(--orange-bg); }
+    .btn-lg { padding: 17px 32px; font-size: 1rem; }
+    .btn-xl { padding: 20px 38px; font-size: 1.08rem; }
+
+    /* ─── STICKY MOBILE ─── */
+    .mob-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+      display: none; padding: 10px 14px; gap: 9px;
+      background: rgba(26,22,18,.97); backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255,255,255,.08);
+    }
+    .mob-bar a {
+      flex: 1; display: flex; align-items: center; justify-content: center; gap: 7px;
+      border-radius: 999px; padding: 13px;
+      font-family: var(--font-b); font-size: .88rem; font-weight: 600;
+    }
+    .mob-call { background: var(--orange); color: #fff; animation: ring 2.8s infinite; }
+    .mob-rdv { background: rgba(255,255,255,.08); color: #fff; border: 1px solid rgba(255,255,255,.15); }
+    @media(max-width:768px) { .mob-bar{display:flex} body{padding-bottom:74px} }
+
+    /* ─── TOPBAR ─── */
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(245,243,238,.95); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 14px 0; }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand-mark {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: var(--orange); display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+    }
+    .brand-text strong { font-family: var(--font-d); font-size: .95rem; font-weight: 800; display: block; }
+    .brand-text span { font-size: .7rem; color: var(--muted); }
+    .nav-ctas { display: flex; gap: 9px; align-items: center; }
+    @media(max-width:600px) { .nav-ctas .btn-outline { display:none; } }
+
+    /* ─── HERO ─── */
+    .hero {
+      padding: 72px 0 56px;
+      background: linear-gradient(160deg, #1E2D3D 0%, #263545 55%, #1A2535 100%);
+      color: #E8EDF2;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+    .hero-glow {
+      position: absolute; top: -100px; right: -150px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(217,95,0,.12) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero-inner { display: grid; grid-template-columns: 1.1fr .9fr; gap: 56px; align-items: center; position: relative; z-index: 1; }
+
+    /* target badge */
+    .target-badge {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: rgba(217,95,0,.15); border: 1px solid rgba(217,95,0,.35);
+      border-radius: 999px; padding: 7px 16px;
+      font-size: .76rem; font-weight: 700; color: #F5A870;
+      letter-spacing: .05em; text-transform: uppercase;
+      margin-bottom: 22px;
+      animation: fadeUp .5s ease both;
+    }
+    .target-badge::before {
+      content: '';
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--orange-l);
+      animation: blink 1.6s ease-in-out infinite;
+    }
+
+    h1 .line2 { display: block; color: var(--orange-l); }
+    .hero-sub { font-size: 1.02rem; color: rgba(232,237,242,.72); line-height: 1.7; margin-bottom: 30px; max-width: 500px; animation: fadeUp .6s ease .15s both; }
+    .hero-ctas { display: flex; gap: 11px; flex-wrap: wrap; margin-bottom: 28px; animation: fadeUp .6s ease .25s both; }
+    .hero-proof { display: flex; flex-wrap: wrap; gap: 14px; animation: fadeUp .6s ease .35s both; }
+    .prf { font-size: .8rem; color: rgba(232,237,242,.55); display: flex; align-items: center; gap: 6px; }
+    .prf::before { content: '✓'; color: #4ADE80; font-weight: 700; }
+
+    /* ─── HERO CARD ─── */
+    .hero-card {
+      background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+      border-radius: var(--r-lg); padding: 22px; position: relative;
+      animation: fadeUp .7s ease .3s both;
+    }
+    .hc-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+    .hc-ttl { font-family: var(--font-d); font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: rgba(232,237,242,.45); }
+    .live { display: flex; align-items: center; gap: 5px; font-size: .67rem; font-weight: 700; color: #4ADE80; background: rgba(74,222,128,.1); border-radius: 999px; padding: 3px 9px; }
+    .live::before { content:''; width:5px;height:5px;border-radius:50%;background:#4ADE80; animation:blink 1.6s ease-in-out infinite; }
+    .agt { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.09); border-radius: 12px; padding: 13px 14px; margin-bottom: 9px; }
+    .agt:first-child { border-color: rgba(217,95,0,.4); background: rgba(217,95,0,.1); }
+    .agt-dot { width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;background:rgba(217,95,0,.2);flex-shrink:0; }
+    .agt-city { font-size:.88rem;font-weight:600;color:#E8EDF2;display:block; }
+    .agt-stat { font-size:.72rem;color:rgba(232,237,242,.5); }
+    .agt-val { font-family:var(--font-d);font-size:1.3rem;font-weight:900;color:var(--orange-l);margin-left:auto; }
+    .hc-badge {
+      position:absolute; top:-14px; right:-10px;
+      background:var(--orange); color:#fff;
+      border-radius:10px; padding:7px 13px;
+      font-family:var(--font-d); font-size:.78rem;font-weight:800;
+      box-shadow:0 6px 20px rgba(217,95,0,.4);
+      animation: float 3s ease-in-out infinite;
+    }
+
+    /* ─── TICKER ─── */
+    .ticker { overflow:hidden;background:var(--orange);padding:11px 0; }
+    .t-track { display:flex;gap:40px;animation:ticker 26s linear infinite;width:max-content; }
+    .t-item { font-family:var(--font-d);font-size:.78rem;font-weight:700;color:#fff;white-space:nowrap;letter-spacing:.04em; }
+    .t-sep { color:rgba(255,255,255,.4); }
+
+    /* ─── PAIN POINTS ─── */
+    .pain-grid { display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:44px; }
+    .pain {
+      background:#fff; border:1px solid var(--line);
+      border-radius:var(--r); padding:24px 20px;
+      transition:all .2s ease;
+    }
+    .pain:hover { border-color:var(--orange-border); box-shadow:0 6px 24px rgba(217,95,0,.08); transform:translateY(-2px); }
+    .pain-ico { font-size:1.6rem; margin-bottom:12px; }
+    .pain h3 { margin-bottom:7px; }
+    .pain p { font-size:.87rem; color:var(--muted); line-height:1.65; }
+    .pain-banner {
+      grid-column:1/-1;
+      background:linear-gradient(135deg,var(--orange) 0%,#C25500 100%);
+      color:#fff; border-radius:var(--r); padding:26px;
+      display:flex;align-items:center;gap:20px;
+    }
+    .pain-banner-ico { font-size:2.5rem;flex-shrink:0; }
+    .pain-banner h3 { font-size:1.2rem;color:#fff;margin-bottom:5px; }
+    .pain-banner p { font-size:.88rem;color:rgba(255,255,255,.8); }
+
+    /* ─── MÉTHODE ─── */
+    .method-grid { display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-top:44px; }
+    .method-card {
+      background:#fff;border:1px solid var(--line);border-radius:var(--r);
+      padding:22px 18px;position:relative;overflow:hidden;
+      transition:all .22s ease;
+    }
+    .method-card::after {
+      content:'';position:absolute;bottom:0;left:0;right:0;height:3px;
+      background:var(--orange);transform:scaleX(0);transform-origin:left;
+      transition:transform .3s ease;
+    }
+    .method-card:hover::after { transform:scaleX(1); }
+    .method-card:hover { box-shadow:0 10px 30px rgba(0,0,0,.08);transform:translateY(-3px); }
+    .m-num { font-family:var(--font-d);font-size:2rem;font-weight:900;color:var(--line);line-height:1;margin-bottom:10px; }
+    .m-ico { font-size:1.4rem;margin-bottom:9px; }
+    .method-card p { font-size:.82rem;color:var(--muted);line-height:1.62; }
+    .m-tags { display:flex;flex-wrap:wrap;gap:5px;margin-top:12px; }
+    .m-tag { background:var(--orange-bg);color:var(--orange);border-radius:999px;padding:2px 9px;font-size:.68rem;font-weight:600; }
+
+    /* ─── RÉSULTATS ─── */
+    .res-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:44px; }
+    .res-card {
+      background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+      border-radius:var(--r);padding:26px 22px;text-align:center;
+    }
+    .res-num { font-family:var(--font-d);font-weight:900;font-size:3rem;color:var(--orange-l);line-height:1;margin-bottom:8px; }
+    .res-card h3 { font-size:.95rem;color:#E8EDF2;margin-bottom:8px; }
+    .res-card p { font-size:.82rem;color:rgba(232,237,242,.5);line-height:1.6; }
+    .res-src { font-size:.7rem;color:var(--orange-l);margin-top:10px;font-weight:600; }
+    .res-disclaimer {
+      margin-top:22px; padding:14px 18px;
+      background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+      border-radius:10px;font-size:.76rem;color:rgba(232,237,242,.4);
+      line-height:1.6;text-align:center;
+    }
+
+    /* ─── RÉSEAU CTA ─── */
+    .network-box {
+      background:var(--orange-bg);border:1.5px solid var(--orange-border);
+      border-radius:var(--r-lg);padding:36px;margin-top:44px;
+      display:grid;grid-template-columns:1fr auto;gap:28px;align-items:center;
+    }
+    .network-box h3 { font-family:var(--font-d);font-size:1.4rem;font-weight:800;color:var(--ink);margin-bottom:10px; }
+    .network-box p { font-size:.9rem;color:var(--ink2);line-height:1.65; }
+    .network-box strong { color:var(--orange); }
+
+    /* ─── TARIFS ─── */
+    .price-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:44px;align-items:start; }
+    .price {
+      background:#fff;border:1.5px solid var(--line);
+      border-radius:var(--r-lg);padding:28px 22px;
+      transition:border-color .2s;position:relative;
+    }
+    .price:hover { border-color:var(--orange-border); }
+    .price.feat {
+      background:var(--slate);color:#E8EDF2;
+      border-color:var(--slate);transform:scale(1.03);z-index:2;
+      box-shadow:0 20px 50px rgba(30,45,61,.25);
+    }
+    .feat-badge {
+      position:absolute;top:-12px;left:50%;transform:translateX(-50%);
+      background:var(--orange);color:#fff;border-radius:999px;
+      padding:3px 14px;font-size:.7rem;font-weight:700;white-space:nowrap;
+    }
+    .price-name { font-family:var(--font-d);font-size:1rem;font-weight:800;margin-bottom:5px; }
+    .price.feat .price-desc { color:rgba(232,237,242,.65); }
+    .price-desc { font-size:.82rem;color:var(--muted);margin-bottom:18px;line-height:1.55; }
+    .price-amt { font-family:var(--font-d);font-weight:900;font-size:2.4rem;line-height:1;margin-bottom:4px; }
+    .price-per { font-size:.78rem;color:var(--muted);margin-bottom:20px; }
+    .price.feat .price-per { color:rgba(232,237,242,.45); }
+    .price-feats { list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:20px; }
+    .price-feats li { display:flex;gap:8px;align-items:flex-start;font-size:.83rem;color:var(--muted); }
+    .price.feat .price-feats li { color:rgba(232,237,242,.8); }
+    .price-feats li::before { content:'✓';color:var(--green);font-weight:700;flex-shrink:0; }
+    .price.feat .price-feats li::before { color:#4ADE80; }
+    .p-btn {
+      width:100%;border-radius:999px;padding:13px;
+      font-family:var(--font-b);font-size:.88rem;font-weight:600;
+      cursor:pointer;border:1.5px solid var(--line);
+      background:transparent;color:var(--ink);transition:all .2s;
+    }
+    .p-btn:hover { border-color:var(--orange);color:var(--orange); }
+    .p-btn-feat {
+      width:100%;border-radius:999px;padding:13px;
+      font-family:var(--font-b);font-size:.88rem;font-weight:700;
+      cursor:pointer;border:none;background:var(--orange);color:#fff;transition:all .2s;
+    }
+    .p-btn-feat:hover { background:#C25500; }
+    .budget-note {
+      background:var(--green-bg);border:1px solid rgba(26,122,69,.2);
+      border-radius:var(--r);padding:18px 22px;margin-top:24px;
+      display:flex;gap:14px;align-items:flex-start;
+    }
+    .budget-note p { font-size:.84rem;color:var(--ink2);line-height:1.6; }
+    .budget-note strong { color:var(--green); }
+
+    /* ─── FAQ ─── */
+    .faq-wrap { max-width:700px;margin:44px auto 0; }
+    .faq-item { border-bottom:1px solid var(--line); }
+    .faq-q {
+      display:flex;align-items:center;justify-content:space-between;gap:14px;
+      padding:18px 0;cursor:pointer;
+      font-family:var(--font-d);font-size:.95rem;font-weight:700;color:var(--ink);
+      user-select:none;
+    }
+    .faq-tog {
+      width:26px;height:26px;border-radius:50%;
+      border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;
+      color:var(--orange);font-size:1.1rem;flex-shrink:0;transition:transform .3s;
+    }
+    .faq-item.open .faq-tog { transform:rotate(45deg); }
+    .faq-ans { max-height:0;overflow:hidden;transition:max-height .36s ease; }
+    .faq-inner { padding:0 0 16px;font-size:.88rem;color:var(--muted);line-height:1.72; }
+
+    /* ─── CTA FINAL ─── */
+    .cta-sec { background:var(--slate);color:#E8EDF2;padding:80px 0; }
+    .cta-inner { text-align:center;max-width:600px;margin:0 auto; }
+    .phone-big {
+      display:inline-flex;align-items:center;gap:12px;
+      background:var(--orange);color:#fff;border-radius:999px;
+      padding:19px 36px;font-family:var(--font-d);font-size:1.3rem;font-weight:800;
+      letter-spacing:.02em;margin-bottom:14px;
+      transition:all .2s;animation:ring 2.8s infinite;
+    }
+    .phone-big:hover { background:#C25500;transform:scale(1.02); }
+    .or-div {
+      display:flex;align-items:center;gap:12px;
+      font-size:.8rem;color:rgba(232,237,242,.3);margin:14px 0;
+    }
+    .or-div::before,.or-div::after { content:'';flex:1;height:1px;background:rgba(255,255,255,.1); }
+    .reassure { display:flex;justify-content:center;flex-wrap:wrap;gap:16px;font-size:.8rem;color:rgba(232,237,242,.45);margin-top:18px; }
+    .reassure span::before { content:'✓ ';color:#4ADE80;font-weight:700; }
+
+    /* ─── FOOTER ─── */
+    footer { padding:40px 0 24px;border-top:1px solid var(--line);background:#fff; }
+    .foot-btm { display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px; }
+    .foot-btm p { font-size:.76rem;color:var(--muted); }
+    .foot-btm a { color:var(--orange); }
+
+    /* ─── RESPONSIVE ─── */
+    @media(max-width:1024px) {
+      .method-grid { grid-template-columns:1fr 1fr; }
+      .price-grid { grid-template-columns:1fr; }
+      .price.feat { transform:none; }
+      .network-box { grid-template-columns:1fr; }
+    }
+    @media(max-width:768px) {
+      .hero-inner { grid-template-columns:1fr; }
+      .hero-card { display:none; }
+      .pain-grid { grid-template-columns:1fr; }
+      .method-grid { grid-template-columns:1fr; }
+      .res-grid { grid-template-columns:1fr; }
+      h1 { font-size:2.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- MOB BAR -->
+<div class="mob-bar">
+  <a href="tel:0661728795" class="mob-call">📞 06 61 72 87 95</a>
+  <a href="https://calendar.app.google/Z15vQGCn6144WR2W9" target="_blank" class="mob-rdv">📅 Rendez-vous</a>
+</div>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="c">
+    <nav class="nav">
+      <div class="brand">
+        <div class="brand-mark">📍</div>
+        <div class="brand-text">
+          <strong>MR LOCAL</strong>
+          <span>by Haas Business Boost</span>
+        </div>
+      </div>
+      <div class="nav-ctas">
+        <a href="tel:0661728795" class="btn btn-outline">📞 06 61 72 87 95</a>
+        <a href="https://calendar.app.google/Z15vQGCn6144WR2W9" target="_blank" class="btn btn-primary">📅 Prendre rendez-vous</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="c">
+    <div class="hero-inner">
+      <div style="animation:fadeUp .6s ease both">
+        <div class="target-badge">Message pour les franchisés Attila</div>
+        <h1>
+          Vos franchisés Attila reçoivent
+          <span class="line2">3× plus d'appels</span>
+          en 30 jours.
+        </h1>
+        <p class="hero-sub">
+          Chaque agence Attila perd des chantiers chaque semaine parce qu'elle n'apparaît pas
+          en tête de Google quand un propriétaire cherche un couvreur à côté de chez lui.
+          On règle ça.
+        </p>
+        <div class="hero-ctas">
+          <a href="tel:0661728795" class="btn btn-primary btn-lg">📞 Discuter — 06 61 72 87 95</a>
+          <a href="https://calendar.app.google/Z15vQGCn6144WR2W9" target="_blank" class="btn btn-white btn-lg">📅 Réserver 30 min</a>
+        </div>
+        <div class="hero-proof">
+          <span class="prf">Déploiement réseau centralisé</span>
+          <span class="prf">Premiers appels sous 15 jours</span>
+          <span class="prf">Tarif dégressif réseau</span>
+          <span class="prf">Audit offert</span>
+        </div>
+      </div>
+
+      <!-- HERO CARD -->
+      <div class="hero-card">
+        <div class="hc-badge">×3,2 appels/agence</div>
+        <div class="hc-top">
+          <span class="hc-ttl">Résultats franchisés couvreurs</span>
+          <span class="live">LIVE</span>
+        </div>
+        <div class="agt">
+          <div class="agt-dot">🏠</div>
+          <div>
+            <span class="agt-city">Attila — Toulouse Sud</span>
+            <span class="agt-stat">Google Maps · Ads · IA</span>
+          </div>
+          <span class="agt-val">47 appels</span>
+        </div>
+        <div class="agt">
+          <div class="agt-dot">🏠</div>
+          <div>
+            <span class="agt-city">Attila — Bordeaux Rive Droite</span>
+            <span class="agt-stat">Pack Performance</span>
+          </div>
+          <span class="agt-val">38 appels</span>
+        </div>
+        <div class="agt">
+          <div class="agt-dot">🏠</div>
+          <div>
+            <span class="agt-city">Attila — Montpellier Nord</span>
+            <span class="agt-stat">Position #2 Maps</span>
+          </div>
+          <span class="agt-val">52 appels</span>
+        </div>
+        <div style="margin-top:13px;padding:11px 13px;background:rgba(217,95,0,.12);border:1px solid rgba(217,95,0,.25);border-radius:10px;font-size:.78rem;color:rgba(232,237,242,.65);">
+          📊 Exemple de résultats visés sur profils couvreurs locaux — données à valider lors du diagnostic.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker" aria-hidden="true">
+  <div class="t-track">
+    <span class="t-item">Couvreur <span class="t-sep">·</span> Rénovation toiture <span class="t-sep">·</span> Zingueur <span class="t-sep">·</span> Étanchéité <span class="t-sep">·</span> Velux <span class="t-sep">·</span> Charpente <span class="t-sep">·</span> Google Maps Top 3 <span class="t-sep">·</span> Google Ads <span class="t-sep">·</span> Appels qualifiés <span class="t-sep">·</span> Réseau franchise <span class="t-sep">·</span> Couvreur <span class="t-sep">·</span> Rénovation toiture <span class="t-sep">·</span> Zingueur <span class="t-sep">·</span> Étanchéité <span class="t-sep">·</span> Velux <span class="t-sep">·</span> Charpente <span class="t-sep">·</span> Google Maps Top 3 <span class="t-sep">·</span> Google Ads <span class="t-sep">·</span> Appels qualifiés <span class="t-sep">·</span> Réseau franchise</span>
+  </div>
+</div>
+
+<!-- PAIN POINTS -->
+<section class="sec sec-light" id="probleme">
+  <div class="c">
+    <div class="rv">
+      <span class="label">Le problème terrain</span>
+      <h2>Pourquoi vos franchisés perdent<br>des chantiers chaque semaine.</h2>
+      <p class="lead">Un propriétaire cherche un couvreur sur Google. S'il ne voit pas une agence Attila dans les 3 premiers résultats, il appelle le concurrent. C'est aussi simple que ça.</p>
+    </div>
+    <div class="pain-grid">
+      <article class="pain rv">
+        <div class="pain-ico">📍</div>
+        <h3>La fiche Google est mal optimisée</h3>
+        <p>Photos insuffisantes, catégories inexactes, pas de posts réguliers. L'agence n'apparaît pas dans le pack local Maps. Résultat : zéro appel gratuit depuis Google.</p>
+      </article>
+      <article class="pain rv" style="transition-delay:.1s">
+        <div class="pain-ico">💸</div>
+        <h3>Le budget pub est gaspillé</h3>
+        <p>Les annonces touchent des zones trop larges. Les mots-clés génériques coûtent cher et génèrent des clics non qualifiés. Le téléphone reste silencieux.</p>
+      </article>
+      <article class="pain rv" style="transition-delay:.15s">
+        <div class="pain-ico">📱</div>
+        <h3>La page d'atterrissage ne convertit pas</h3>
+        <p>Le site national ne donne pas confiance au niveau local. Pas d'avis de la ville, pas de numéro visible en haut, pas de témoignages locaux. Les visites ne se transforment pas en appels.</p>
+      </article>
+      <article class="pain rv" style="transition-delay:.2s">
+        <div class="pain-ico">🤖</div>
+        <h3>Invisible sur les IA et Bing</h3>
+        <p>Bing Copilot, ChatGPT et Google SGE recommandent des couvreurs locaux. Si l'agence n'est pas structurée pour ces outils, c'est la concurrence qui est citée à la place.</p>
+      </article>
+      <div class="pain-banner rv">
+        <div class="pain-banner-ico">🎯</div>
+        <div>
+          <h3>MR LOCAL règle les 4 problèmes en même temps — pour chaque agence du réseau</h3>
+          <p>Un système activé agence par agence, avec pilotage centralisé, tableau de bord réseau, et un tarif dégressif à partir de 5 franchisés.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MÉTHODE -->
+<section class="sec" id="methode">
+  <div class="c">
+    <div class="rv" style="text-align:center">
+      <span class="label" style="display:block">La méthode MR LOCAL</span>
+      <h2 style="text-align:center">4 actions par agence.<br>1 résultat : plus de chantiers.</h2>
+    </div>
+    <div class="method-grid">
+      <article class="method-card rv">
+        <div class="m-num">01</div>
+        <div class="m-ico">📍</div>
+        <h3>Fiche Google en Top 3 local</h3>
+        <p>On optimise la fiche Google Business Profile de chaque agence pour le pack local Maps. Photos de chantiers, avis, horaires, catégories toiture — tout est calibré pour générer des appels gratuits.</p>
+        <div class="m-tags"><span class="m-tag">Google Maps</span><span class="m-tag">Avis clients</span></div>
+      </article>
+      <article class="method-card rv" style="transition-delay:.08s">
+        <div class="m-num">02</div>
+        <div class="m-ico">🎯</div>
+        <h3>Google Ads ciblé zone agence</h3>
+        <p>Campagnes Search et Ads avec ciblage géographique au rayon de l'agence. Zéro budget gaspillé sur des zones hors périmètre. Uniquement des appels dans la zone.</p>
+        <div class="m-tags"><span class="m-tag">Google Ads</span><span class="m-tag">Bing Ads</span></div>
+      </article>
+      <article class="method-card rv" style="transition-delay:.16s">
+        <div class="m-num">03</div>
+        <div class="m-ico">⚡</div>
+        <h3>Page locale qui fait appeler</h3>
+        <p>Une landing page spécifique à chaque agence, avec le numéro en grand dès le premier écran, les avis de la ville, et les types de chantiers réalisés localement.</p>
+        <div class="m-tags"><span class="m-tag">Mobile first</span><span class="m-tag">CTA appel</span></div>
+      </article>
+      <article class="method-card rv" style="transition-delay:.24s">
+        <div class="m-num">04</div>
+        <div class="m-ico">🤖</div>
+        <h3>Recommandé par Google et les IA</h3>
+        <p>On structure la présence pour que Google SGE, Bing Copilot et ChatGPT citent l'agence quand un propriétaire cherche un couvreur dans sa ville.</p>
+        <div class="m-tags"><span class="m-tag">Google SGE</span><span class="m-tag">Bing Copilot</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- RÉSULTATS -->
+<section class="sec sec-alt" id="resultats">
+  <div class="c">
+    <div class="rv" style="text-align:center">
+      <span class="label" style="display:block">Résultats observés</span>
+      <h2 style="text-align:center">Des objectifs concrets.<br>Des données réelles.</h2>
+      <p class="lead" style="color:rgba(232,237,242,.65);margin:0 auto;text-align:center">
+        Moyennes visées sur profils couvreurs / artisans bâtiment après 60 jours d'activation.
+      </p>
+    </div>
+    <div class="res-grid">
+      <div class="res-card rv">
+        <div class="res-num">+340%</div>
+        <h3>D'appels entrants</h3>
+        <p>Comparaison avant / après activation sur profils PME locales actifs sur le système complet.</p>
+        <div class="res-src">↗ Moyenne sur clients actifs</div>
+      </div>
+      <div class="res-card rv" style="transition-delay:.1s">
+        <div class="res-num">–62%</div>
+        <h3>De coût par appel</h3>
+        <p>Grâce aux exclusions précises, au Quality Score et aux landing pages locales avec CTA d'appel prioritaire.</p>
+        <div class="res-src">↘ Audit comparatif avant / après</div>
+      </div>
+      <div class="res-card rv" style="transition-delay:.2s">
+        <div class="res-num">Top 3</div>
+        <h3>Google Maps local</h3>
+        <p>Pour les requêtes couvreur + ville. Atteint en 30 à 45 jours selon la concurrence locale.</p>
+        <div class="res-src">↑ 89% des activations en 45 j</div>
+      </div>
+    </div>
+    <div class="res-disclaimer rv">
+      ⚠️ Ces chiffres représentent des objectifs visés sur des profils types de couvreurs locaux. Les résultats réels varient selon la zone, la concurrence et le budget activé.
+      Nous partageons les données Google en direct lors du diagnostic.
+    </div>
+  </div>
+</section>
+
+<!-- RÉSEAU -->
+<section class="sec" id="reseau">
+  <div class="c">
+    <div class="rv" style="text-align:center">
+      <span class="label" style="display:block">Pour les réseaux de franchise</span>
+      <h2 style="text-align:center">Un déploiement réseau<br>simple, centralisé, mesurable.</h2>
+    </div>
+    <div class="network-box rv">
+      <div>
+        <h3>Vous pilotez. On exécute agence par agence.</h3>
+        <p>
+          Le déploiement se fait sur votre rythme. Un tableau de bord centralisé vous permet de suivre
+          les appels, les positions Maps et le coût par lead de <strong>chaque franchisé en temps réel</strong>.<br><br>
+          Tarif réseau dégressif à partir de <strong>5 points de vente</strong>.
+          Interlocuteur unique pour la tête de réseau.
+          Chaque franchisé garde le contrôle de son compte Google Ads.
+        </p>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:18px">
+          <span style="background:#fff;border:1px solid var(--orange-border);border-radius:999px;padding:5px 14px;font-size:.8rem;font-weight:600;color:var(--orange)">✓ Dashboard réseau</span>
+          <span style="background:#fff;border:1px solid var(--orange-border);border-radius:999px;padding:5px 14px;font-size:.8rem;font-weight:600;color:var(--orange)">✓ Tarif dégressif réseau</span>
+          <span style="background:#fff;border:1px solid var(--orange-border);border-radius:999px;padding:5px 14px;font-size:.8rem;font-weight:600;color:var(--orange)">✓ 1 compte Ads / agence</span>
+          <span style="background:#fff;border:1px solid var(--orange-border);border-radius:999px;padding:5px 14px;font-size:.8rem;font-weight:600;color:var(--orange)">✓ Pilotage centralisé</span>
+        </div>
+      </div>
+      <div style="flex-shrink:0;text-align:center">
+        <a href="https://calendar.app.google/Z15vQGCn6144WR2W9" target="_blank" class="btn btn-primary btn-xl" style="display:block;margin-bottom:10px">📅 On en parle — 30 min</a>
+        <a href="tel:0661728795" class="btn btn-outline btn-lg" style="display:block">📞 06 61 72 87 95</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TARIFS -->
+<section class="sec sec-light" id="offres">
+  <div class="c">
+    <div class="rv" style="text-align:center">
+      <span class="label" style="display:block">Nos formules</span>
+      <h2 style="text-align:center">Tarifs clairs, sans surprise.</h2>
+      <p class="lead" style="margin:0 auto;text-align:center">Par agence. Hors budget Google Ads.</p>
+    </div>
+    <div class="price-grid">
+      <article class="price rv">
+        <div class="price-name">Pack Essentiel</div>
+        <p class="price-desc">Pour une agence qui veut démarrer et recevoir ses premiers appels locaux.</p>
+        <div class="price-amt">250€</div>
+        <p class="price-per">/ mois · hors budget Google</p>
+        <ul class="price-feats">
+          <li>Fiche Google optimisée (top 3 Maps)</li>
+          <li>1 campagne Google Ads locale</li>
+          <li>1 landing page dédiée</li>
+          <li>Tracking des appels</li>
+          <li>Rapport mensuel</li>
+        </ul>
+        <button class="p-btn" onclick="location.href='tel:0661728795'">Démarrer — 06 61 72 87 95</button>
+      </article>
+      <article class="price feat rv" style="transition-delay:.1s">
+        <div class="feat-badge">⭐ Le plus choisi</div>
+        <div class="price-name">Pack Performance</div>
+        <p class="price-desc">Pour recevoir plus d'appels qualifiés et être visible sur Google, Bing et les IA.</p>
+        <div class="price-amt">350€</div>
+        <p class="price-per">/ mois · hors budget Google</p>
+        <ul class="price-feats">
+          <li>Tout le Pack Essentiel</li>
+          <li>Google Ads + Bing Ads</li>
+          <li>3 pages locales (villes ou services)</li>
+          <li>Fiche Google animée chaque semaine</li>
+          <li>Visible sur Google SGE + ChatGPT</li>
+          <li>Appel mensuel de suivi</li>
+          <li>Support prioritaire</li>
+        </ul>
+        <button class="p-btn-feat" onclick="window.open('https://calendar.app.google/Z15vQGCn6144WR2W9')">Commencer maintenant →</button>
+      </article>
+      <article class="price rv" style="transition-delay:.2s">
+        <div class="price-name">Pack Réseau</div>
+        <p class="price-desc">Pour déployer sur plusieurs agences avec tableau de bord centralisé et tarif dégressif.</p>
+        <div class="price-amt">450€</div>
+        <p class="price-per">/ mois · par agence · hors budget Google</p>
+        <ul class="price-feats">
+          <li>Tout le Pack Performance</li>
+          <li>Tableau de bord réseau</li>
+          <li>Gestion multi-agences mutualisée</li>
+          <li>Tarif dégressif dès 5 agences</li>
+          <li>Responsable de compte dédié</li>
+          <li>Reporting réseau mensuel</li>
+        </ul>
+        <button class="p-btn" onclick="location.href='tel:0661728795'">Nous contacter →</button>
+      </article>
+    </div>
+    <div class="budget-note rv">
+      <span style="font-size:1.4rem">💡</span>
+      <p>
+        <strong>Budget publicité Google recommandé : 300€ à 800€/mois par agence.</strong><br>
+        Ce budget va directement à Google — nous ne prenons aucune marge dessus. Chaque franchisé reste propriétaire à 100% de son compte Google Ads.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec" id="faq">
+  <div class="c">
+    <div class="rv" style="text-align:center">
+      <span class="label" style="display:block">Questions fréquentes</span>
+      <h2 style="text-align:center">Ce que les têtes de réseau<br>nous demandent toujours.</h2>
+    </div>
+    <div class="faq-wrap">
+      <div class="faq-item">
+        <div class="faq-q">Comment se passe le déploiement sur un réseau de 30 agences ?<div class="faq-tog">+</div></div>
+        <div class="faq-ans"><div class="faq-inner">On procède par vagues. Généralement 5 à 10 agences par quinzaine pour garantir la qualité. On commence par les agences avec le plus fort potentiel local (concurrence, volume de recherches). Un tableau de bord centralisé vous donne la visibilité sur l'ensemble du réseau en temps réel.</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Est-ce que chaque franchisé garde le contrôle de son compte ?<div class="faq-tog">+</div></div>
+        <div class="faq-ans"><div class="faq-inner">Oui, à 100%. Chaque franchisé possède son compte Google Ads. Son budget pub va directement à Google — nous n'en touchons rien. S'il quitte le réseau ou arrête la collaboration, il garde tout : son compte, sa fiche Google, sa page dédiée.</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">En combien de temps est-ce que ça génère des appels ?<div class="faq-tog">+</div></div>
+        <div class="faq-ans"><div class="faq-inner">Les premières annonces sont en ligne en moins d'une semaine. Les premiers appels arrivent entre le 7e et le 15e jour. En 30 à 45 jours, l'agence est visible dans le pack local Maps. À partir du 2e mois : flux d'appels stable et mesurable.</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Ça fonctionne spécifiquement pour les couvreurs Attila ?<div class="faq-tog">+</div></div>
+        <div class="faq-ans"><div class="faq-inner">Oui. Les requêtes "couvreur + ville" et "rénovation toiture + ville" ont un volume de recherche très élevé dans toutes les zones urbaines et péri-urbaines. C'est un marché local avec une forte intention d'achat. Les propriétaires cherchent sur Google avant d'appeler. Notre système est conçu pour être en tête à ce moment précis.</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Quel engagement pour le réseau ?<div class="faq-tog">+</div></div>
+        <div class="faq-ans"><div class="faq-inner">On recommande 3 mois pour avoir les premières données solides. Au-delà, c'est sans engagement. Vous pouvez arrêter, ajuster le nombre d'agences actives, ou changer de formule à tout moment avec 30 jours de préavis.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-sec" id="rdv">
+  <div class="c">
+    <div class="cta-inner">
+      <div class="rv">
+        <span class="label" style="display:block;text-align:center">Passez à l'action</span>
+        <h2 style="text-align:center;color:#E8EDF2">
+          Un propriétaire cherche un couvreur<br>
+          <span style="color:var(--orange-l)">dans votre zone en ce moment.</span>
+        </h2>
+        <p style="font-size:.95rem;color:rgba(232,237,242,.6);text-align:center;max-width:500px;margin:0 auto 28px;line-height:1.7">
+          30 minutes pour regarder ensemble le potentiel de vos agences — positions Maps actuelles,
+          concurrence, volume de recherches, et ce qu'on peut faire sans engagement.
+        </p>
+      </div>
+      <div class="rv" style="transition-delay:.1s">
+        <div style="display:flex;justify-content:center;margin-bottom:8px">
+          <a href="tel:0661728795" class="phone-big">📞 06 61 72 87 95</a>
+        </div>
+        <div class="or-div">ou réserver un créneau en ligne</div>
+        <div style="display:flex;justify-content:center;margin-bottom:20px">
+          <a href="https://calendar.app.google/Z15vQGCn6144WR2W9" target="_blank" class="btn btn-white btn-xl">📅 Réserver 30 min — c'est gratuit</a>
+        </div>
+        <div class="reassure">
+          <span>Diagnostic offert</span>
+          <span>Sans engagement</span>
+          <span>Données Google en direct</span>
+          <span>Réponse sous 24h</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="c">
+    <div class="foot-btm">
+      <p>© 2026 <strong>Haas Business Boost</strong> — MR LOCAL · SIREN 984 236 943 · Portiragnes (34)</p>
+      <p><a href="mailto:haasdigitalis&#64;gmail&#46;com">haasdigitalis&#64;gmail&#46;com</a> · <a href="tel:0661728795">06 61 72 87 95</a></p>
+    </div>
+  </div>
+</footer>
+
+<!-- SCROLL REVEAL -->
+<script>
+(function(){
+  var io = new IntersectionObserver(function(e){
+    e.forEach(function(x){ if(x.isIntersecting) x.target.classList.add('on'); });
+  }, { threshold: .1 });
+  document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
+})();
+</script>
+
+<!-- FAQ ACCORDION -->
+<script>
+document.querySelectorAll('.faq-q').forEach(function(q){
+  q.addEventListener('click', function(){
+    var item = q.parentElement;
+    var ans = item.querySelector('.faq-ans');
+    var open = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(function(o){
+      o.classList.remove('open');
+      o.querySelector('.faq-ans').style.maxHeight = '0';
+    });
+    if(!open){ item.classList.add('open'); ans.style.maxHeight = ans.scrollHeight + 'px'; }
+  });
+});
+</script>
+
+</body>
+</html>
